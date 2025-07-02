@@ -37,8 +37,6 @@ public class OrderService extends  AbstractOrderService{
         repository.doSaveOrder(orderAggregate);
     }
 
-
-
     @Override
     protected PayOrderEntity doPrepayOrder(String userId, String productId, String productName, String orderId, BigDecimal totalAmount) throws AlipayApiException {
         AlipayTradePagePayRequest request = new AlipayTradePagePayRequest();
