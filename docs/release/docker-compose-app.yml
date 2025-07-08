@@ -23,7 +23,7 @@ services:
 
   # 部署后端项目
   s-pay-mall:
-    image: fuzhengwei/s-pay-mall-mvc-app:1.0
+    image: hhhhhh28/s-pay-mall-ddd-zky-app:1.0
     container_name: s-pay-mall
     restart: on-failure
     ports:
