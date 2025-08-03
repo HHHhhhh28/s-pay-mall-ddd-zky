@@ -24,13 +24,14 @@ public class CreateOrderAggregate {
     // 订单实体对象
     private OrderEntity orderEntity;
 
-    public static OrderEntity buildOrderEntity(String productId, String productName) {
+    public static OrderEntity buildOrderEntity(String productId, String productName, Integer marketType){
         return OrderEntity.builder()
                 .productId(productId)
                 .productName(productName)
-                .orderId(RandomStringUtils.randomNumeric(16))
+                .orderId(RandomStringUtils.randomNumeric(12))
                 .orderTime(new Date())
-                .orderStatus(OrderStatusVO.CREATE)
+                .orderStatusVO(OrderStatusVO.CREATE)
+                .marketType(marketType)
                 .build();
     }
 

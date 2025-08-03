@@ -1,7 +1,9 @@
 package com.zky.config;
 
+import com.zky.infrastructure.gateway.IGroupBuyMarketService;
 import com.zky.infrastructure.gateway.IWeixinApiService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import retrofit2.Retrofit;
@@ -11,19 +13,25 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 @Configuration
 public class Retrofit2Config {
 
-    private static final String BASE_URL = "https://api.weixin.qq.com/";
+    @Value("${app.config.group-buy-market.api-url}")
+    private String groupBuyMarketApiUrl;
 
     @Bean
-    public Retrofit retrofit() {
-        return new Retrofit.Builder()
-                .baseUrl(BASE_URL)
+    public IWeixinApiService weixinApiService() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://api.weixin.qq.com/")
                 .addConverterFactory(JacksonConverterFactory.create()).build();
-    }
 
-    @Bean
-    public IWeixinApiService weixinApiService(Retrofit retrofit) {
         return retrofit.create(IWeixinApiService.class);
     }
 
+    @Bean
+    public IGroupBuyMarketService groupBuyMarketService() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(groupBuyMarketApiUrl)
+                .addConverterFactory(JacksonConverterFactory.create()).build();
+
+        return retrofit.create(IGroupBuyMarketService.class);
+    }
 }
 

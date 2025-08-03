@@ -8,6 +8,7 @@ import com.zky.domain.order.model.entity.OrderEntity;
 import com.zky.domain.order.model.entity.PayOrderEntity;
 import com.zky.domain.order.model.entity.ProductEntity;
 import com.zky.domain.order.model.entity.ShopCartEntity;
+import com.zky.domain.order.model.valobj.MarketTypeVO;
 import com.zky.domain.order.model.valobj.OrderStatusVO;
 import com.zky.infrastructure.dao.IOrderDao;
 import com.zky.infrastructure.dao.po.PayOrder;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 
@@ -44,10 +46,13 @@ public class OrderRepository implements IOrderRepository {
                 .productId(order.getProductId())
                 .productName(order.getProductName())
                 .orderId(order.getOrderId())
-                .orderStatus(OrderStatusVO.valueOf(order.getStatus()))
+                .orderStatusVO(OrderStatusVO.valueOf(order.getStatus()))
                 .orderTime(order.getOrderTime())
                 .totalAmount(order.getTotalAmount())
                 .payUrl(order.getPayUrl())
+                .marketType(order.getMarketType())
+                .marketDeductionAmount(order.getMarketDeductionAmount())
+                .payAmount(order.getPayAmount())
                 .build();
     }
 
@@ -64,19 +69,27 @@ public class OrderRepository implements IOrderRepository {
         order.setOrderId(orderEntity.getOrderId());
         order.setOrderTime(orderEntity.getOrderTime());
         order.setTotalAmount(productEntity.getPrice());
-        order.setStatus(orderEntity.getOrderStatus().getCode());
+        order.setStatus(orderEntity.getOrderStatusVO().getCode());
+        order.setMarketType(MarketTypeVO.NO_MARKET.getCode());
+        order.setMarketDeductionAmount(BigDecimal.ZERO);
+        order.setPayAmount(productEntity.getPrice());
+        order.setMarketType(orderEntity.getMarketType());
 
         orderDao.insert(order);
     }
 
     @Override
     public void updateOrderPayInfo(PayOrderEntity payOrderEntity) {
-        PayOrder order = new PayOrder();
-        order.setUserId(payOrderEntity.getUserId());
-        order.setOrderId(payOrderEntity.getOrderId());
-        order.setPayUrl(payOrderEntity.getPayUrl());
-        order.setStatus(payOrderEntity.getOrderStatus().getCode());
-        orderDao.updateOrderPayInfo(order);
+        PayOrder payOrderReq = PayOrder.builder()
+                .userId(payOrderEntity.getUserId())
+                .orderId(payOrderEntity.getOrderId())
+                .status(payOrderEntity.getOrderStatus().getCode())
+                .payUrl(payOrderEntity.getPayUrl())
+                .marketType(payOrderEntity.getMarketType())
+                .marketDeductionAmount(payOrderEntity.getMarketDeductionAmount())
+                .payAmount(payOrderEntity.getPayAmount())
+                .build();
+        orderDao.updateOrderPayInfo(payOrderReq);
 
     }
 

@@ -1,7 +1,9 @@
 package com.zky.test.domain;
 
+import com.alibaba.fastjson.JSON;
 import com.zky.domain.order.model.entity.PayOrderEntity;
 import com.zky.domain.order.model.entity.ShopCartEntity;
+import com.zky.domain.order.model.valobj.MarketTypeVO;
 import com.zky.domain.order.service.IOrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -21,13 +23,17 @@ public class OrderServiceTest {
 
     @Test
     public void test_createOrder() throws Exception {
-        ShopCartEntity shopCartEntity = ShopCartEntity.builder()
-                .userId("xiaofuge")
-                .productId("100010090091")
-                .build();
+        ShopCartEntity shopCartEntity = new ShopCartEntity();
+        shopCartEntity.setUserId("xiaofuge09");
+        shopCartEntity.setProductId("9890001");
+        shopCartEntity.setTeamId(null);
+        shopCartEntity.setActivityId(100123L);
+        shopCartEntity.setMarketTypeVO(MarketTypeVO.GROUP_BUY_MARKET);
 
         PayOrderEntity payOrderEntity = orderService.createOrder(shopCartEntity);
-        log.info("测试结果：{}", payOrderEntity);
+
+        log.info("请求参数:{}", JSON.toJSONString(shopCartEntity));
+        log.info("测试结果:{}", JSON.toJSONString(payOrderEntity));
     }
 
 }
