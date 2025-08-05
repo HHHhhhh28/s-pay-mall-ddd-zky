@@ -4,6 +4,8 @@ package com.zky.domain.order.adapter.port;
 import com.zky.domain.order.model.entity.MarketPayDiscountEntity;
 import com.zky.domain.order.model.entity.ProductEntity;
 
+import java.util.Date;
+
 public interface IProductPort {
 
     /**
@@ -16,5 +18,6 @@ public interface IProductPort {
 
     MarketPayDiscountEntity lockMarketPayOrder(String userId, String teamId, Long activityId, String productId, String orderId);
 
+    void settlementMarketPayOrder(String userId, String orderId, Date orderTime);
 
 }

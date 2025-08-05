@@ -3,6 +3,7 @@ package com.zky.domain.order.service;
 import com.zky.domain.order.model.entity.PayOrderEntity;
 import com.zky.domain.order.model.entity.ShopCartEntity;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -22,7 +23,7 @@ public interface IOrderService {
      * 更新订单状态
      * @param orderId 订单ID
      */
-    void changeOrderPaySuccess(String orderId);
+    void changeOrderPaySuccess(String orderId, Date payTime);
 
     /**
      * 查询有效期内，未接收到支付回调的订单
@@ -36,4 +37,5 @@ public interface IOrderService {
 
     boolean changeOrderClose(String orderId);
 
+    void changeOrderMarketSettlement(List<String> outTradeNoList);
 }

@@ -18,6 +18,8 @@ import java.util.Date;
 @NoArgsConstructor
 public class OrderEntity {
 
+    // 用户ID
+    private String userId;
     /** 商品ID */
     private String productId;
     /** 商品 */
