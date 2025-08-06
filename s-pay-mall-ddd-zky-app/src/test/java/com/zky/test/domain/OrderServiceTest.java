@@ -22,9 +22,24 @@ public class OrderServiceTest {
     private IOrderService orderService;
 
     @Test
-    public void test_createOrder() throws Exception {
+    public void test_createOrder_NO_MARKET() throws Exception {
         ShopCartEntity shopCartEntity = new ShopCartEntity();
-        shopCartEntity.setUserId("xiaofuge19");
+        shopCartEntity.setUserId("xiaofuge01");
+        shopCartEntity.setProductId("9890001");
+        shopCartEntity.setTeamId(null);
+        shopCartEntity.setActivityId(100123L);
+        shopCartEntity.setMarketTypeVO(MarketTypeVO.NO_MARKET);
+
+        PayOrderEntity payOrderEntity = orderService.createOrder(shopCartEntity);
+
+        log.info("请求参数:{}", JSON.toJSONString(shopCartEntity));
+        log.info("测试结果:{}", JSON.toJSONString(payOrderEntity));
+    }
+
+    @Test
+    public void test_createOrder_GROUP_BUY_MARKET() throws Exception {
+        ShopCartEntity shopCartEntity = new ShopCartEntity();
+        shopCartEntity.setUserId("xiaofuge20");
         shopCartEntity.setProductId("9890001");
         shopCartEntity.setTeamId(null);
         shopCartEntity.setActivityId(100123L);

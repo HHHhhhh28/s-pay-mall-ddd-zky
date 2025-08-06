@@ -9,6 +9,7 @@ import com.zky.api.dto.NotifyRequestDTO;
 import com.zky.api.response.Response;
 import com.zky.domain.order.model.entity.PayOrderEntity;
 import com.zky.domain.order.model.entity.ShopCartEntity;
+import com.zky.domain.order.model.valobj.MarketTypeVO;
 import com.zky.domain.order.service.IOrderService;
 import com.zky.types.common.Constants;
 import lombok.extern.slf4j.Slf4j;
@@ -48,10 +49,16 @@ public class AliPayController implements IPayService {
             log.info("商品下单，根据商品ID创建支付单开始 userId:{} productId:{}", createPayRequestDTO.getUserId(), createPayRequestDTO.getUserId());
             String userId = createPayRequestDTO.getUserId();
             String productId = createPayRequestDTO.getProductId();
+            String teamId = createPayRequestDTO.getTeamId();
+            Integer marketType = createPayRequestDTO.getMarketType();
+
             // 下单
             PayOrderEntity payOrderEntity = orderService.createOrder(ShopCartEntity.builder()
                     .userId(userId)
                     .productId(productId)
+                    .teamId(teamId)
+                    .marketTypeVO(MarketTypeVO.valueOf(marketType))
+                    .activityId(createPayRequestDTO.getActivityId())
                     .build());
 
             log.info("商品下单，根据商品ID创建支付单完成 userId:{} productId:{} orderId:{}", userId, productId, payOrderEntity.getOrderId());

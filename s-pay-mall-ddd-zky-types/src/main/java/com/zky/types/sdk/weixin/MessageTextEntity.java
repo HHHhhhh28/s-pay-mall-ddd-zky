@@ -25,6 +25,9 @@ public class MessageTextEntity {
 
     @XStreamAlias("MsgID")
     private String msgId;
+    @XStreamAlias("MsgID")
+    private String msgID;
+
 
     @XStreamAlias("Status")
     private String status;
