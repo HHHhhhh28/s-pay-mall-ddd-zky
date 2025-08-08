@@ -1,5 +1,6 @@
 package com.zky.infrastructure.adapter.port;
 
+import cn.hutool.core.util.IdUtil;
 import com.google.common.cache.Cache;
 import com.zky.domain.auth.adapter.port.ILoginPort;
 import com.zky.infrastructure.gateway.IWeixinApiService;
@@ -37,24 +38,35 @@ public class LoginPort implements ILoginPort {
     @Resource
     private IWeixinApiService weixinApiService;
 
+    /**
+     * 获取 ticket；
+     * <a href="https://developers.weixin.qq.com/doc/offiaccount/Account_Management/Generating_a_Parametric_QR_Code.html">获取 ticket API</a>
+     */
     @Override
     public String createQrCodeTicket() throws IOException {
-        //1.获取accessToken
+        String sceneStr = IdUtil.getSnowflake().nextIdStr();
+        return createQrCodeTicket(sceneStr);
+    }
+
+    @Override
+    public String createQrCodeTicket(String sceneStr) throws IOException {
+        // 1. 获取 accessToken
         String accessToken = weixinAccessToken.getIfPresent(appid);
-        if (accessToken == null) {
+        if (null == accessToken) {
             Call<WeixinTokenResponseDTO> call = weixinApiService.getToken("client_credential", appid, appSecret);
             WeixinTokenResponseDTO weixinTokenRes = call.execute().body();
             assert weixinTokenRes != null;
             accessToken = weixinTokenRes.getAccess_token();
             weixinAccessToken.put(appid, accessToken);
         }
+
         // 2. 生成 ticket
         WeixinQrCodeRequestDTO weixinQrCodeReq = WeixinQrCodeRequestDTO.builder()
                 .expire_seconds(2592000)
-                .action_name(WeixinQrCodeRequestDTO.ActionNameTypeVO.QR_SCENE.getCode())
+                .action_name(WeixinQrCodeRequestDTO.ActionNameTypeVO.QR_STR_SCENE.getCode())
                 .action_info(WeixinQrCodeRequestDTO.ActionInfo.builder()
                         .scene(WeixinQrCodeRequestDTO.ActionInfo.Scene.builder()
-                                .scene_id(100601)
+                                .scene_str(sceneStr)
                                 .build())
                         .build())
                 .build();
