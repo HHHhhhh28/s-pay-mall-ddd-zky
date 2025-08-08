@@ -69,6 +69,13 @@ alipay:
   return_url: http://localhost:63342/s-pay-mall-ddd-zky/docs/dev-ops/nginx/html/index.html
   gatewayUrl: https://openapi-sandbox.dl.alipaydev.com/gateway.do
 
+# SC 渠道配置 - 拼团对接渠道值
+sc:
+  group:
+    buy:
+      market:
+        source: s01
+        chanel: c01
 
 # 日志
 logging:

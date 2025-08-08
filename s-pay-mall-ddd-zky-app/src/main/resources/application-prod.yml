@@ -1,12 +1,5 @@
 server:
   port: 8080
-  tomcat:
-    max-connections: 20
-    threads:
-      max: 20
-      min-spare: 10
-    accept-count: 10
-
 
 # 应用配置
 app:
@@ -17,11 +10,45 @@ app:
     cross-origin: '*'
     # SC 渠道配置 - 拼团对接渠道值、回调通知
     group-buy-market:
-      api-url: http://127.0.0.1:8091
-      notify-url: http://127.0.0.1:8080/api/v1/test/group_buy_notify
+      api-url: https://api.zkyhwx.top
+      notify-url: https://api.zkyhwx.top/api/v1/alipay/group_buy_notify
       source: s01
       chanel: c01
 
+
+# 线程池配置
+thread:
+  pool:
+    executor:
+      config:
+        core-pool-size: 20
+        max-pool-size: 50
+        keep-alive-time: 5000
+        block-queue-size: 5000
+        policy: CallerRunsPolicy
+
+# 数据库配置；启动时配置数据库资源信息
+spring:
+  datasource:
+    username: root
+    password: 123456
+    url: jdbc:mysql://127.0.0.1:3306/s-pay-mall-ddd-market?useUnicode=true&characterEncoding=utf8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai&useSSL=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  hikari:
+    pool-name: Retail_HikariCP
+    minimum-idle: 15 #最小空闲连接数量
+    idle-timeout: 180000 #空闲连接存活最大时间，默认600000（10分钟）
+    maximum-pool-size: 25 #连接池最大连接数，默认是10
+    auto-commit: true  #此属性控制从池返回的连接的默认自动提交行为,默认值：true
+    max-lifetime: 1800000 #此属性控制池中连接的最长生命周期，值0表示无限生命周期，默认1800000即30分钟
+    connection-timeout: 30000 #数据库连接超时时间,默认30秒，即30000
+    connection-test-query: SELECT 1
+  type: com.zaxxer.hikari.HikariDataSource
+
+# MyBatis 配置【如需使用记得打开】
+mybatis:
+  mapper-locations: classpath:/mybatis/mapper/*.xml
+  config-location:  classpath:/mybatis/config/mybatis-config.xml
 
 # 微信公众号对接
 weixin:
@@ -32,29 +59,6 @@ weixin:
     app-secret: cd0f69db3147b307fb068f93793b3c5d
     template_id: rDKpV4F4nTqb_2KAy4DydAfqMJt8Cmfj-pKekfrBiOQ
 
-spring:
-  datasource:
-    username: root
-    password: 123456
-    url: jdbc:mysql://mysql:3306/s-pay-mall?useUnicode=true&characterEncoding=utf8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai&useSSL=true
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    initialSize: 5
-    minIdle: 5
-    maxActive: 20
-    maxWait: 60000
-    timeBetweenEvictionRunsMillis: 60000
-    validationQuery: SELECT 1
-    testWhileIdle: true
-    testOnBorrow: false
-    testOnReturn: false
-    poolPreparedStatements: true
-    maxPoolPreparedStatementPerConnectionSize: 20
-    filters: stat
-
-mybatis:
-  mapper-locations: classpath:/mybatis/mapper/*.xml
-  config-location:  classpath:/mybatis/config/mybatis-config.xml
-
 # 支付宝支付 - 沙箱 https://opendocs.alipay.com/common/02kkv7
 alipay:
   enabled: true
@@ -64,6 +68,14 @@ alipay:
   notify_url: https://api.zkyhwx.top/api/v1/alipay/alipay_notify_url
   return_url: https://front.zkyhwx.top
   gatewayUrl: https://openapi-sandbox.dl.alipaydev.com/gateway.do
+
+# SC 渠道配置 - 拼团对接渠道值
+sc:
+  group:
+    buy:
+      market:
+        source: s01
+        chanel: c01
 
 # 日志
 logging:
