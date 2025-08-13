@@ -32,7 +32,7 @@ spring:
   datasource:
     username: root
     password: 123456
-    url: jdbc:mysql://127.0.0.1:3306/s-pay-mall-ddd-market?useUnicode=true&characterEncoding=utf8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai&useSSL=true
+    url: jdbc:mysql://117.72.221.253:3306/s-pay-mall-ddd-market?useUnicode=true&characterEncoding=utf8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai&useSSL=true
     driver-class-name: com.mysql.cj.jdbc.Driver
   hikari:
     pool-name: Retail_HikariCP
@@ -44,6 +44,46 @@ spring:
     connection-timeout: 30000 #数据库连接超时时间,默认30秒，即30000
     connection-test-query: SELECT 1
   type: com.zaxxer.hikari.HikariDataSource
+  # RabbitMQ
+  rabbitmq:
+    addresses: 117.72.221.253
+    port: 5672
+    username: admin
+    password: admin
+    listener:
+      simple:
+        prefetch: 1 # 每次投递n个消息，消费完在投递n个
+    template:
+      delivery-mode: persistent # 确保全局默认设置为持久化（可选）
+    # 消息配置
+    config:
+      # 生产者
+      producer:
+        # 主题配置
+        topic_order_pay_success:
+          # 绑定交换机
+          exchange: s_pay_mall_exchange
+          # 消费主题
+          routing_key: topic.order_pay_success
+          # 消费队列
+          queue: s_pay_mall_queue_2_order_pay_success
+      consumer:
+        # 主题配置 topic 主题，team_success
+        topic_team_success:
+          # 绑定交换机 - 消息提供者的交换机
+          exchange: group_buy_market_exchange
+          # 消息主题
+          routing_key: topic.team_success
+          # 消费队列 - 每个系统有自己的消费队列
+          queue: s_pay_mall_queue_2_topic_team_success
+        # 主题配置
+        topic_order_pay_success:
+          # 绑定交换机
+          exchange: s_pay_mall_exchange
+          # 消费主题
+          routing_key: topic.order_pay_success
+          # 消费队列
+          queue: s_pay_mall_queue_2_order_pay_success
 
 # MyBatis 配置【如需使用记得打开】
 mybatis:

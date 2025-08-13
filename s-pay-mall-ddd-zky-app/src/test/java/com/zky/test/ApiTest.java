@@ -3,6 +3,7 @@ package com.zky.test;
 import com.alibaba.fastjson.JSON;
 import com.google.common.eventbus.EventBus;
 import com.zky.domain.order.adapter.event.PaySuccessMessageEvent;
+import com.zky.infrastructure.event.EventPublisher;
 import com.zky.types.event.BaseEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
